@@ -108,3 +108,62 @@ print(model_output)
 # During training:
 # optimizer.step()
 # optimizer.zero_grad()
+
+
+
+
+#################### My Examples #################
+import torch
+# set up simple graph relating x, y and z
+x = torch.tensor(3.0, requires_grad=True)
+y = x*x
+y.retain_grad()
+z = 2*y + 3
+z.retain_grad()
+print("x: ", x)
+print("y = x*x: ", y)
+print("z= 2*y + 3: ", z)
+# work out gradients
+z.backward()
+# what is gradient at x = 3
+print("Gradient at x = 3 ==> dz/dx = (dz/dy)*(dy/dx) = (2)(2x) = 4x : ", x.grad)
+print("Gradient at y = x*x ==> dz/dy = 2 : ", y.grad)
+print("Gradient at z = 2*y + 3 ==> dz/dz = 1 : ", z.grad)
+#--------- Output----------#
+# x:  tensor(3., requires_grad=True)
+# y = x*x:  tensor(9., grad_fn=<MulBackward0>)
+# z= 2*y + 3:  tensor(21., grad_fn=<AddBackward0>)
+# Gradient at x = 2 ==> dz/dx = (dz/dy)*(dy/dx) = (2)(2x) = 4x :  tensor(12.)
+# Gradient at y = x*x ==> dz/dy = 2 :  tensor(2.)
+# Gradient at z = 2*y + 3 ==> dz/dz = 1 :  tensor(1.)
+#--------------------------#
+
+a = torch.tensor(2.0, requires_grad=True)
+b = a*a
+b.retain_grad()
+c = 2*b + 3
+c.retain_grad()
+d = 2*a + c*2
+d.retain_grad()
+print("a: ", a)
+print("b = a*a: ", b)
+print("c= 2*b + 3: ", c)
+print("d= 2*a + c*2: ", d)
+# work out gradients
+d.backward()
+# what is gradient at a = 2
+print("Gradient at a = 3 ==> dd/da = d(2*a + c*2)/da = 2(da/da) + 2*dc/da = 2 + 2*(dc/db)*(db/da) = 2 + 2(2)(2a) = 2 + 8a : ", a.grad)
+print("Gradient at b = a*a ==> dd/db = (dd/dc)(dc/db) = (2)(2) = 4: ", b.grad)
+print("Gradient at c = 2*b + 3 ==> dd/dc = 2 : ", c.grad)
+print("Gradient at d = 2*a + c*2 ==> dd/dd = 1 : ", d.grad)
+
+# ----------- Output -------------#
+# a:  tensor(2., requires_grad=True)
+# b = a*a:  tensor(4., grad_fn=<MulBackward0>)
+# c= 2*b + 3:  tensor(11., grad_fn=<AddBackward0>)
+# d= 2*a + c*2:  tensor(26., grad_fn=<AddBackward0>)
+# Gradient at a = 3 ==> dd/da = (dd/dc)*(dc/db)*(db/da) + (dd/dc)*(dc/db)*(db/da) = (2)(2)(2a) = 8a :  tensor(18.)
+# Gradient at b = a*a ==> dd/db = (dd/dc)(dc/db) = (2)(2) = 4:  tensor(4.)
+# Gradient at c = 2*b + 3 ==> dd/dc = 2 :  tensor(2.)
+# Gradient at d = 2*a + c*2 ==> dd/dd = 1 :  tensor(1.)
+#--------------------------------------------
