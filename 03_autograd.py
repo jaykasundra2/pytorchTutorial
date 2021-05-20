@@ -1,3 +1,4 @@
+# Ref: https://www.educative.io/blog/pytorch-tutorial
 
 import torch
 # The autograd package provides automatic differentiation 
